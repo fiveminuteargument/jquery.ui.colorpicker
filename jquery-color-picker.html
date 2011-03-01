@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.3/themes/base/jquery-ui.css" type="text/css" media="all">
+<link rel="stylesheet" href="http://static.jquery.com/ui/css/demo-docs-theme/ui.theme.css" type="text/css" media="all">
+
+<link rel="stylesheet" href="jquery.ui.colorpicker.css" type="text/css" media="all">
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.3/jquery-ui.min.js"></script>
+
+<script type="text/javascript" src="jquery.ui.colorpicker.js"></script>
+
+<script type="text/javascript">
+$(function() {
+	$('div').colorpicker({
+		value: { red: 51, green: 102, blue: 153 },
+
+		change: function() {
+			console.log("value changed", this);
+			//console.log($(this).colorpicker("value"));
+		},
+
+		show_preview: false
+	});
+});
+</script>
+
+</head>
+
+<body>
+
+<div class="color-picker"></div>
+
+</body>
+
+</html>

@@ -1,0 +1,28 @@
+body { font-size: 12px; }
+
+.color-picker { width: 20em;  }
+
+    .color-picker ul { padding: 0; margin: 1em; list-style-type: none;  }
+
+        .color-picker li.red,
+        .color-picker li.green,
+        .color-picker li.blue { position: relative; padding-right: 4em; margin-bottom: 0.5em; }
+
+            .color-picker label { display: block; margin-bottom: 0.5em; }
+
+            .color-picker .ui-slider { width: 100%; }
+
+            .color-picker .red   .ui-slider { background: -moz-linear-gradient(0, rgb(0, 0, 0), rgb(255, 0, 0)); }
+            .color-picker .green .ui-slider { background: -moz-linear-gradient(0, rgb(0, 0, 0), rgb(0, 255, 0)); }
+            .color-picker .blue  .ui-slider { background: -moz-linear-gradient(0, rgb(0, 0, 0), rgb(0, 0, 255)); }
+
+                .color-picker .ui-slider-handle { -moz-border-radius: 1em; }
+
+            .color-picker input { width: 2.5em; position: absolute; text-align: center; right: 0; height: 1em; line-height: 1; bottom: 0; }
+
+
+    .color-picker .preview { height: 2em; line-height: 2em; text-align: center; margin-top: 1em; border: 1px solid #aaa; margin: 1em; }
+
+    .color-picker .palette { overflow: hidden; margin-left: 0.875em; margin-right: 0.875em; }
+
+        .color-picker .palette li { width: 1em; height: 1em; float: left; margin: 0.125em; border: 1px solid #aaa; cursor: pointer; }

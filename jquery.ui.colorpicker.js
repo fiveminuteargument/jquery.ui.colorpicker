@@ -1,0 +1,214 @@
+/*
+ * jQuery UI Color Picker widget 0.0.1
+ *
+ *
+ * Depends:
+ *   jquery.ui.core.js
+ *   jquery.ui.widget.js
+ */
+(function( $, undefined ) {
+
+$.widget( "ui.colorpicker", {
+	options: {
+		value: { red: 0, green: 0, blue: 0 },
+
+		show_preview: true,
+
+		palette: {
+
+			// Example palette - will need some methods to manage these
+
+			tango: [
+				'#FCE94F', '#EDD400', '#C4A000', '#FCAF3E', '#F57900', '#CE5C00',
+				'#E9B96E', '#C17D11', '#8F5902', '#CEE14B', '#9DB029', '#727E0A',
+				'#729FCF', '#3465A4', '#204A87', '#AD7FA8', '#75507B', '#5C3566',
+				'#EF2929', '#CC0000', '#A40000', '#EEEEEC', '#D3D7CF', '#BABDB6',
+				'#888A85', '#555753'
+			]
+		}
+	},
+
+	sliders: { red: null, green: null, blue: null },
+
+
+	// Constructor
+
+	_create: function() {
+		var self = this;
+
+		this.element
+			.addClass( "ui-colorpicker ui-widget ui-widget-content ui-corner-all" );
+
+		var $ul = $('<ul></ul>').appendTo(this.element);
+
+
+		// Build the sliders
+
+		for (var color in this.sliders)
+		{
+			this.sliders[color] = $('<div></div>').slider({
+				min: 0,
+				max: 255,
+
+				slide: function(event, ui) {
+					var color = $(this).parent('li')[0].className;
+					self.options.value[color] = ui.value;
+					self._repaint();
+				}
+			});
+
+			var $li = $('<li class="' + color + '"><label for="">' + color.substr(0, 1).toUpperCase() + color.substr(1) + '</label></li>').appendTo($ul);
+
+			$li.append(this.sliders[color]);
+
+			$('<input type="text"/>').appendTo($li).keyup(function() {
+				var val = $(this).val();
+
+				if (!val) return;
+
+				if (val.match(/^[0-9]+$/) && val >= 0 && val <= 255)
+				{
+					self._update(
+						$(self.element).find('.red input').val(),
+						$(self.element).find('.green input').val(),
+						$(self.element).find('.blue input').val()
+					);
+				}
+			});
+		}
+
+
+		// Preview
+
+		if (this.options.show_preview)
+		{
+			this.element.prepend('<div class="preview"></div>');
+		}
+
+
+		// Palette
+
+		var $palette = $('<ul class="palette"></ul>').appendTo(this.element);
+
+		for (var p in this.options.palette['tango'])
+		{
+			var color = this.options.palette['tango'][p];
+			$palette.append('<li style="background-color: ' + color + '"></li>');
+		}
+
+		$palette.find('li').click(function() {
+			$(this).css('border', '1px solid black');
+			var color = $(this).css('background-color');
+			//console.log(color);
+
+			var matches = color.match(/rgb\(([0-9]+),\s?([0-9]+),\s?([0-9]+)\)/);
+
+			self._update(matches[1], matches[2], matches[3]);
+		});
+
+		self._repaint();
+	},
+
+
+	// Destructor
+
+	destroy: function() {
+		this.element
+			.removeClass( "ui-colorpicker ui-widget ui-widget-content ui-corner-all" );
+
+		this.find('*').remove();
+
+		$.Widget.prototype.destroy.apply( this, arguments );
+	},
+
+
+	// Public methods
+
+	value: function() {
+		return this._value();
+	},
+
+
+	//-------------------------------------------------------------------------
+	// Private methods
+	//-------------------------------------------------------------------------
+
+
+	// Update the current value with provided values
+
+	_update: function(red, green, blue) {
+		console.log("update");
+		this.options.value.red    = red;
+		this.options.value.green  = green;
+		this.options.value.blue   = blue;
+
+		this._repaint();
+	},
+
+
+	// What's this doing? Could return current rgb value as hex ...
+
+	_value: function() {
+		// TODO Should probably guarantee these values are pareInt'd from somewhere else ...
+		var r = parseInt(this.options.value.red).toString(16);
+		var g = parseInt(this.options.value.green).toString(16);
+		var b = parseInt(this.options.value.blue).toString(16)
+
+		r = r < 10 ? '0' + r : r;
+		g = g < 10 ? '0' + g : g;
+		b = b < 10 ? '0' + b : b;
+
+		return '#' + r + g + b;
+	},
+
+
+	// Update everything
+
+	_repaint: function() {
+
+		var range = {};
+
+		for (var color in this.sliders)
+		{
+			this.sliders[color].slider("value", this.options.value[color]);
+			this.sliders[color].next("input").val(this.options.value[color]);
+
+			for (var color2 in this.sliders)
+			{
+				range[color2] = color2 == color ? [ 0, 255 ] : [ this.options.value[color2], this.options.value[color2] ];
+			}
+
+			this.sliders[color].css({
+				background:
+					'-moz-linear-gradient(0, rgb(' + range.red[0] + ', ' + range.green[0] + ', ' + range.blue[0] + '), rgb(' + range.red[1] + ', ' + range.green[1] + ', ' + range.blue[1] + '))',
+			});
+		}
+
+
+		// This was commented out - not sure why ...
+
+		this._trigger( "change" );
+
+
+		// Update the 'preview' panel (which should probably be optional ...
+
+		this.element.find('.preview').css({
+			backgroundColor: 'rgb(' + this.options.value.red + ', ' + this.options.value.green + ', ' + this.options.value.blue + ')',
+			color: this._getContrastYIQ(this.options.value.red, this.options.value.green, this.options.value.blue)
+		}).text(this._value());
+	},
+
+
+	// Courtesy of http://24ways.org/2010/calculating-color-contrast
+
+	_getContrastYIQ: function(r, g, b, hexcolor) {
+		var yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+		return (yiq >= 128) ? 'black' : 'white';
+	}
+});
+
+$.extend( $.ui.colorpicker, {
+	version: "0.0.1"
+});
+
+})( jQuery );
