@@ -99,7 +99,6 @@ $.widget( "ui.colorpicker", {
 		$palette.find('li').click(function() {
 			$(this).css('border', '1px solid black');
 			var color = $(this).css('background-color');
-			//console.log(color);
 
 			var matches = color.match(/rgb\(([0-9]+),\s?([0-9]+),\s?([0-9]+)\)/);
 
@@ -137,7 +136,6 @@ $.widget( "ui.colorpicker", {
 	// Update the current value with provided values
 
 	_update: function(red, green, blue) {
-		console.log("update");
 		this.options.value.red    = red;
 		this.options.value.green  = green;
 		this.options.value.blue   = blue;

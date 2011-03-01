@@ -20,8 +20,7 @@ $(function() {
 		value: { red: 51, green: 102, blue: 153 },
 
 		change: function() {
-			console.log("value changed", this);
-			//console.log($(this).colorpicker("value"));
+			if (window.console) console.log("value changed", this);
 		},
 
 		show_preview: false
