@@ -12,9 +12,20 @@ body { font-size: 12px; }
 
             .color-picker .ui-slider { width: 100%; }
 
-            .color-picker .red   .ui-slider { background: -moz-linear-gradient(0, rgb(0, 0, 0), rgb(255, 0, 0)); }
-            .color-picker .green .ui-slider { background: -moz-linear-gradient(0, rgb(0, 0, 0), rgb(0, 255, 0)); }
-            .color-picker .blue  .ui-slider { background: -moz-linear-gradient(0, rgb(0, 0, 0), rgb(0, 0, 255)); }
+            .color-picker .red   .ui-slider {
+                background: -moz-linear-gradient(0, rgb(0, 0, 0), rgb(255, 0, 0));
+                background: -webkit-linear-gradient(0, rgb(0, 0, 0), rgb(255, 0, 0));
+            }
+
+            .color-picker .green .ui-slider {
+                background: -moz-linear-gradient(0, rgb(0, 0, 0), rgb(0, 255, 0));
+                background: -webkit-linear-gradient(0, rgb(0, 0, 0), rgb(0, 255, 0));
+            }
+
+            .color-picker .blue  .ui-slider {
+                background: -moz-linear-gradient(0, rgb(0, 0, 0), rgb(0, 0, 255));
+                background: -webkit-linear-gradient(0, rgb(0, 0, 0), rgb(0, 0, 255));
+            }
 
                 .color-picker .ui-slider-handle { -moz-border-radius: 1em; }
 

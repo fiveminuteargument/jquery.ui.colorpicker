@@ -176,9 +176,11 @@ $.widget( "ui.colorpicker", {
 				range[color2] = color2 == color ? [ 0, 255 ] : [ this.options.value[color2], this.options.value[color2] ];
 			}
 
+			var vendor = jQuery.browser.mozilla ? '-moz-' : jQuery.browser.webkit ? '-webkit-' : '';
+
 			this.sliders[color].css({
 				background:
-					'-moz-linear-gradient(0, rgb(' + range.red[0] + ', ' + range.green[0] + ', ' + range.blue[0] + '), rgb(' + range.red[1] + ', ' + range.green[1] + ', ' + range.blue[1] + '))',
+					vendor + 'linear-gradient(0, rgb(' + range.red[0] + ', ' + range.green[0] + ', ' + range.blue[0] + '), rgb(' + range.red[1] + ', ' + range.green[1] + ', ' + range.blue[1] + '))',
 			});
 		}
 

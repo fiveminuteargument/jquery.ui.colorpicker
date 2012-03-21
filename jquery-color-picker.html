@@ -20,10 +20,10 @@ $(function() {
 		value: { red: 51, green: 102, blue: 153 },
 
 		change: function() {
-			if (window.console) console.log("value changed", this);
+			if (window.console) console.log("value changed", $(this).colorpicker('value'));
 		},
 
-		show_preview: false
+		show_preview: true
 	});
 });
 </script>
