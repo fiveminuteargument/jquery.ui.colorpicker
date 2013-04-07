@@ -33,10 +33,11 @@ $.widget( "ui.colorpicker", {
 			.on('keyup', 'input', function() {
 				var val = $(this).val();
 
-				if (!val) return;
+				if (!val) {
+					return;
+				}
 
-				if (val.match(/^[0-9]+$/) && val >= 0 && val <= 255)
-				{
+				if (val.match(/^[0-9]+$/) && val >= 0 && val <= 255) {
 					self._update(
 						$(self.element).find('.red input').val(),
 						$(self.element).find('.green input').val(),
@@ -48,8 +49,7 @@ $.widget( "ui.colorpicker", {
 
 		// Build the sliders
 
-		for (var color in this.sliders)
-		{
+		for (var color in this.sliders) {
 			this.sliders[color] = $('<div></div>').slider({
 				min: 0,
 				max: 255,
@@ -62,38 +62,33 @@ $.widget( "ui.colorpicker", {
 			});
 
 			var $li = $('<li class="' + color + '"><label for="">' + color.substr(0, 1).toUpperCase() + color.substr(1) + '</label></li>').appendTo($ul);
-
 			$li.append(this.sliders[color]);
-
 			$('<input type="text"/>').appendTo($li);
 		}
 
 
 		// Preview
 
-		if (this.options.show_preview)
-		{
+		if (this.options.show_preview) {
 			this.element.prepend('<div class="preview"></div>');
 		}
 
 
 		// Palette
 
-		var $palette = $('<ul class="palette"></ul>').appendTo(this.element);
+		var $palette = $('<ul class="palette"></ul>')
+			.appendTo(this.element)
+			.on('click', 'li', function() {
+				var color = $(this).css('background-color');
 
-		for (var p in this.options.palette)
-		{
-			var color = this.options.palette[p];
-			$palette.append('<li style="background-color: ' + color + '"></li>');
+				var matches = color.match(/rgb\(([0-9]+),\s?([0-9]+),\s?([0-9]+)\)/);
+
+				self._update(matches[1], matches[2], matches[3]);
+			});
+
+		for (var p in this.options.palette) {
+			$palette.append('<li style="background-color: ' + this.options.palette[p] + '"></li>');
 		}
-
-		$palette.on('click', 'li', function() {
-			var color = $(this).css('background-color');
-
-			var matches = color.match(/rgb\(([0-9]+),\s?([0-9]+),\s?([0-9]+)\)/);
-
-			self._update(matches[1], matches[2], matches[3]);
-		});
 
 		self._repaint();
 	},
@@ -133,11 +128,9 @@ $.widget( "ui.colorpicker", {
 		this._repaint();
 	},
 
-
-	// What's this doing? Could return current rgb value as hex ...
-
 	_value: function() {
-		// TODO Should probably guarantee these values are pareInt'd from somewhere else ...
+		// TODO Should probably guarantee these values are parseInt'd from
+		// somewhere else ...
 		var r = parseInt(this.options.value.red).toString(16);
 		var g = parseInt(this.options.value.green).toString(16);
 		var b = parseInt(this.options.value.blue).toString(16)
@@ -155,28 +148,30 @@ $.widget( "ui.colorpicker", {
 	_repaint: function() {
 
 		var range = {},
-			vendors = [ 'moz', 'webkit' ];
+			vendors = [ 'moz', 'webkit' ],
+			color,
+			color2,
+			v;
 
-		for (var color in this.sliders)
-		{
-			this.sliders[color].slider("value", this.options.value[color]);
-			this.sliders[color].next("input").val(this.options.value[color]);
+		for (color in this.sliders) {
+			this.sliders[color]
+				.slider("value", this.options.value[color])
+				.next("input")
+				.val(this.options.value[color]);
 
-			for (var color2 in this.sliders)
-			{
-				range[color2] = color2 == color ? [ 0, 255 ] : [ this.options.value[color2], this.options.value[color2] ];
+			for (color2 in this.sliders) {
+				range[color2] = color2 == color
+					? [0, 255]
+					: [this.options.value[color2], this.options.value[color2]];
 			}
 
-			for (var v in vendors) {
+			for (v in vendors) {
 				this.sliders[color].css({
 					background:
 						'-' + vendors[v] + '-linear-gradient(0, rgb(' + range.red[0] + ', ' + range.green[0] + ', ' + range.blue[0] + '), rgb(' + range.red[1] + ', ' + range.green[1] + ', ' + range.blue[1] + '))',
 				});
 			}
 		}
-
-
-		// This was commented out - not sure why ...
 
 		this._trigger( "change" );
 
