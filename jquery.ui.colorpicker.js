@@ -28,7 +28,22 @@ $.widget( "ui.colorpicker", {
 		this.element
 			.addClass( "ui-colorpicker ui-widget ui-widget-content ui-corner-all" );
 
-		var $ul = $('<ul></ul>').appendTo(this.element);
+		var $ul = $('<ul></ul>')
+			.appendTo(this.element)
+			.on('keyup', 'input', function() {
+				var val = $(this).val();
+
+				if (!val) return;
+
+				if (val.match(/^[0-9]+$/) && val >= 0 && val <= 255)
+				{
+					self._update(
+						$(self.element).find('.red input').val(),
+						$(self.element).find('.green input').val(),
+						$(self.element).find('.blue input').val()
+					);
+				}
+			});
 
 
 		// Build the sliders
@@ -50,20 +65,7 @@ $.widget( "ui.colorpicker", {
 
 			$li.append(this.sliders[color]);
 
-			$('<input type="text"/>').appendTo($li).keyup(function() {
-				var val = $(this).val();
-
-				if (!val) return;
-
-				if (val.match(/^[0-9]+$/) && val >= 0 && val <= 255)
-				{
-					self._update(
-						$(self.element).find('.red input').val(),
-						$(self.element).find('.green input').val(),
-						$(self.element).find('.blue input').val()
-					);
-				}
-			});
+			$('<input type="text"/>').appendTo($li);
 		}
 
 
@@ -85,7 +87,7 @@ $.widget( "ui.colorpicker", {
 			$palette.append('<li style="background-color: ' + color + '"></li>');
 		}
 
-		$palette.find('li').click(function() {
+		$palette.on('click', 'li', function() {
 			var color = $(this).css('background-color');
 
 			var matches = color.match(/rgb\(([0-9]+),\s?([0-9]+),\s?([0-9]+)\)/);
