@@ -1,6 +1,6 @@
 # jquery.ui.colorpicker
 
-A basic color picker widget, created mainly as an experiment with background
+A basic color picker widget, created mainly as an experiment with CSS background
 gradients.
 
 ![A screenshot of the widget](screenshot.png)

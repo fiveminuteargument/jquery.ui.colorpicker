@@ -14,18 +14,7 @@ $.widget( "ui.colorpicker", {
 
 		show_preview: true,
 
-		palette: {
-
-			// Example palette - will need some methods to manage these
-
-			tango: [
-				'#FCE94F', '#EDD400', '#C4A000', '#FCAF3E', '#F57900', '#CE5C00',
-				'#E9B96E', '#C17D11', '#8F5902', '#CEE14B', '#9DB029', '#727E0A',
-				'#729FCF', '#3465A4', '#204A87', '#AD7FA8', '#75507B', '#5C3566',
-				'#EF2929', '#CC0000', '#A40000', '#EEEEEC', '#D3D7CF', '#BABDB6',
-				'#888A85', '#555753'
-			]
-		}
+		palette: []
 	},
 
 	sliders: { red: null, green: null, blue: null },
@@ -90,14 +79,13 @@ $.widget( "ui.colorpicker", {
 
 		var $palette = $('<ul class="palette"></ul>').appendTo(this.element);
 
-		for (var p in this.options.palette['tango'])
+		for (var p in this.options.palette)
 		{
-			var color = this.options.palette['tango'][p];
+			var color = this.options.palette[p];
 			$palette.append('<li style="background-color: ' + color + '"></li>');
 		}
 
 		$palette.find('li').click(function() {
-			$(this).css('border', '1px solid black');
 			var color = $(this).css('background-color');
 
 			var matches = color.match(/rgb\(([0-9]+),\s?([0-9]+),\s?([0-9]+)\)/);
